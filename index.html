@@ -194,7 +194,8 @@
                 question: "Why would Hawaiians restrict the top zones from human use? How does this protect resources for the future?",
                 questionId: "restricted",
                 showImage: true,
-                imageURL: "https://i.imgur.com/jke0g7y.png"
+                imageURL: "https://i.imgur.com/jke0g7y.png",
+                imageCredit: true
             },
             {
                 title: "Phase III: Sacred Responsibility",
@@ -276,7 +277,7 @@
                     ${imageHTML}
                     <div class="phase">
                         <h2>${section.title}</h2>
-                        <p>${section.content.replace(/\n/g, '<br><br>')}</p>
+                        <p>${section.content.replace(/\n/g, '<br>')}</p>
                         <div class="name-input">
                             <strong>👤 Your Name:</strong><br><br>
                             Enter your full name:
@@ -295,9 +296,14 @@
                 // Build image HTML if this section should show image
                 let imageHTML = '';
                 if (section.showImage && section.imageURL) {
+                    let creditHTML = '';
+                    if (section.imageCredit) {
+                        creditHTML = '<p class="image-credit">Graphic by Andrew Millison, Restoring Hawaii, www.andrewmillision.com</p>';
+                    }
                     imageHTML = `
                         <div class="diagram-container">
                             <img src="${section.imageURL}" alt="Ahupuaʻa Diagram" class="diagram">
+                            ${creditHTML}
                         </div>
                     `;
                 }
@@ -306,7 +312,7 @@
                     ${imageHTML}
                     <div class="phase">
                         <h2>${section.title}</h2>
-                        <p>${section.content.replace(/\n/g, '<br><br>')}</p>
+                        <p>${section.content.replace(/\n/g, '<br>')}</p>
                         <div class="question">
                             <strong>💭 Think About It:</strong><br><br>
                             ${section.question}
