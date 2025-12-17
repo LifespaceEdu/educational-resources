@@ -133,7 +133,8 @@
                 title: "Welcome! Enter Your Name",
                 content: `Before we begin learning about the Ahupuaʻa system, please enter your name below. This will be included when you submit your work to your teacher.`,
                 isNameSection: true,
-                showImage: true
+                showImage: true,
+                imageURL: "https://i.imgur.com/W1TliPE.png"
             },
             {
                 title: "Phase I: The Ahupuaʻa System",
@@ -191,7 +192,9 @@
                 
                 <strong>Wao Lau Wale</strong> - The forest that was tended by people. It was terraced all the way up the mountain to the spring sources.`,
                 question: "Why would Hawaiians restrict the top zones from human use? How does this protect resources for the future?",
-                questionId: "restricted"
+                questionId: "restricted",
+                showImage: true,
+                imageURL: "https://i.imgur.com/jke0g7y.png"
             },
             {
                 title: "Phase III: Sacred Responsibility",
@@ -261,10 +264,10 @@
             if (section.isNameSection) {
                 // Build image HTML if this section should show image
                 let imageHTML = '';
-                if (section.showImage) {
+                if (section.showImage && section.imageURL) {
                     imageHTML = `
                         <div class="diagram-container">
-                            <img src="https://i.imgur.com/W1TliPE.png" alt="Ahupuaʻa Diagram" class="diagram">
+                            <img src="${section.imageURL}" alt="Ahupuaʻa Diagram" class="diagram">
                         </div>
                     `;
                 }
@@ -289,7 +292,18 @@
                     </p>
                 `;
             } else {
+                // Build image HTML if this section should show image
+                let imageHTML = '';
+                if (section.showImage && section.imageURL) {
+                    imageHTML = `
+                        <div class="diagram-container">
+                            <img src="${section.imageURL}" alt="Ahupuaʻa Diagram" class="diagram">
+                        </div>
+                    `;
+                }
+                
                 content.innerHTML = `
+                    ${imageHTML}
                     <div class="phase">
                         <h2>${section.title}</h2>
                         <p>${section.content.replace(/\n/g, '<br><br>')}</p>
