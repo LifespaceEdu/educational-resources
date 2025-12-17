@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ahupuaʻa Learning</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f0f9ff;
+        }
+        h1 {
+            color: #1e40af;
+            border-bottom: 3px solid #1e40af;
+            padding-bottom: 10px;
+        }
+        .phase {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .question {
+            background: #fef3c7;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid #f59e0b;
+            border-radius: 5px;
+        }
+        .name-input {
+            background: #fef3c7;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid #f59e0b;
+            border-radius: 5px;
+        }
+        textarea, input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 16px;
+            border: 2px solid #d1d5db;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            background: #2563eb;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #1d4ed8;
+        }
+        .section-btn {
+            background: #e5e7eb;
+            color: #1f2937;
+            padding: 8px 12px;
+            margin: 5px;
+            font-size: 14px;
+        }
+        .section-btn:hover {
+            background: #d1d5db;
+        }
+        .section-btn.active {
+            background: #2563eb;
+            color: white;
+        }
+        p {
+            line-height: 1.8;
+            font-size: 18px;
+        }
+        .diagram {
+            width: 100%;
+            max-width: 700px;
+            margin: 20px auto;
+            display: block;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        .image-credit {
+            text-align: center;
+            font-size: 14px;
+            color: #6b7280;
+            font-style: italic;
+            margin-top: 10px;
+        }
+        .diagram-container {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>🌺 Ahupuaʻa Learning Journey</h1>
+    <p>Hawaiian Land Management & Justice</p>
+    
+    <div style="background: white; padding: 15px; margin: 20px 0; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        <strong>Jump to Section:</strong><br>
+        <div id="sectionMenu" style="margin-top: 10px;"></div>
+    </div>
+    
+    <div id="content"></div>
+    
+    <div style="text-align: center; margin: 20px 0;">
+        <div style="margin-bottom: 10px;">
+            <button onclick="previousSection()">← Previous</button>
+            <button onclick="nextSection()">Next →</button>
+        </div>
+        <div style="margin-bottom: 10px;">
+            <button onclick="goToSection(0)" style="background: #6b7280;">🏠 Return to Start</button>
+            <button onclick="saveWork()" style="background: #059669;">💾 Save My Work</button>
+        </div>
+    </div>
+
+    <script>
+        let currentSection = 0;
+        let answers = {};
+        let studentName = '';
+        
+        // Image URL - replace this with your uploaded image URL
+        const diagramURL = 'https://github.com/user-attachments/assets/a78f081f-e1ce-4f7b-b611-7d00e6084edc';
+        
+        const sections = [
+            {
+                title: "Welcome! Enter Your Name",
+                content: `Before we begin learning about the Ahupuaʻa system, please enter your name below. This will be included when you submit your work to your teacher.`,
+                isNameSection: true,
+                questionId: "student_name"
+            },
+            {
+                title: "Phase I: The Ahupuaʻa System",
+                content: `Ahupuaʻa is the Hawaiian term for the traditional way of dividing the land. It includes three important aspects:
+                
+                1. <strong>Socioeconomic</strong>: This means it's related to money and social status.
+                2. <strong>Geologic</strong>: This has to do with the physical structure of the Earth.
+                3. <strong>Climatic</strong>: This is about long-term weather patterns in an area.
+                
+                Before Hawaiians had contact with Europeans and before the Hawaiian government was illegally overthrown, they lived in a highly organized and sustainable system.`,
+                question: "Why is it important that the text says the Hawaiian government was 'illegally overthrown'? What does this tell us?",
+                questionId: "overthrow",
+                showDiagram: false
+            },
+            {
+                title: "Phase I: Power and Control",
+                content: `The illegal overthrow was an act of Imperialism. This means a powerful country took control of Hawaiian lands and government by force.
+                
+                This created what we call the Coloniality of Power - where outside forces set up new rules that took away Hawaiian people's rights to their own land and way of life.`,
+                question: "Who do you think benefited from taking control of Hawaiian lands? Who lost out?",
+                questionId: "power",
+                showDiagram: false
+            },
+            {
+                title: "Phase II: What is an Ahupuaʻa?",
+                content: `Think of an ahupuaʻa like a slice of pie that runs from the top of a mountain down to the ocean.
+                
+                Each ahupuaʻa was a self-sustaining unit - it contained all the resources that an entire community needed. This included:
+                - Sea salt and fish
+                - Land for farming kalo (taro) or sweet potato
+                - Koa and other trees grown in the upland
+                
+                People who lived on the coast would trade with those living up the mountain. They traded fish for wood to build homes and canoes.`,
+                question: "A watershed is a land area that channels rainfall to streams and rivers. Why would it make sense to organize communities around watersheds?",
+                questionId: "watershed",
+                showDiagram: true
+            },
+            {
+                title: "Phase II: Abundance, Not Scarcity",
+                content: `Ahupuaʻa varied in size. If a region was lacking in resources, the ahupuaʻa would be larger to make up for it.
+                
+                The Hawaiians practiced:
+                - Aloha (respect)
+                - Laulima (cooperation)
+                - Mālama (stewardship)
+                
+                This created pono (balance). The ancient Hawaiians shared knowledge and resources, enjoyed abundance, and even had time for art and recreation during Makahiki (the harvest season).`,
+                question: "Many people today believe there's 'not enough to go around.' How does the ahupuaʻa system challenge that idea?",
+                questionId: "abundance",
+                showDiagram: false
+            },
+            {
+                title: "Phase II: The Sacred Zones",
+                content: `<strong>Wao Akua</strong> - At the very top, above the clouds. This space was for the gods and was restricted to allow nature to thrive without human interference.
+                
+                <strong>Wao Kele</strong> - Just below, surrounded by clouds and very wet. A different environment.
+                
+                <strong>Wao Nahele</strong> - The ancient forest, left remote for natural fauna to control and provide resources.
+                
+                <strong>Wao Lau Wale</strong> - The forest that was tended by people. It was terraced all the way up the mountain to the spring sources.`,
+                question: "Why would Hawaiians restrict the top zones from human use? How does this protect resources for the future?",
+                questionId: "restricted",
+                showDiagram: true
+            },
+            {
+                title: "Phase III: Sacred Responsibility",
+                content: `In the Wao Lau Wale, farmers had an important job:
+                
+                The important part for the farmer was not the amount of water coming into their system. It was the amount and quality of water that was put back into the system for the users below.
+                
+                This is called a sacred responsibility to downstream users.`,
+                question: "Think about water in your community today. Who controls it? Does everyone have access to clean water? What would need to change?",
+                questionId: "water_today",
+                showDiagram: false
+            },
+            {
+                title: "Phase III: Fixing Problems vs. Fixing Systems",
+                content: `There are two ways to address unfairness:
+                
+                Mitigation: Help people adjust to a barrier or problem.
+                Example: Give people bottled water when their tap water is poisoned.
+                
+                Transformation: Remove the barrier completely.
+                Example: Fix the water system so tap water is clean for everyone.
+                
+                True justice means transformation - fixing the conditions that harm people, not just helping people survive harmful conditions.`,
+                question: "Think of a problem in your community. What would be a 'mitigation' solution? What would be a 'transformation' solution?",
+                questionId: "mitigation",
+                showDiagram: false
+            },
+            {
+                title: "Phase IV: What Would It Take?",
+                content: `To restore the ahupuaʻa system today would require:
+                
+                - Redistribution of land and water control back to Hawaiian people
+                - Political power returned to Indigenous communities
+                - Recognition that Hawaiian knowledge systems work
+                
+                This isn't about the past. It's about justice now.`,
+                question: "What would need to happen for Hawaiian people to have control over their traditional lands and water systems again? Who would need to give up power?",
+                questionId: "restoration",
+                showDiagram: false
+            },
+            {
+                title: "Phase IV: Your Voice",
+                content: `You've learned about:
+                - How a sophisticated Indigenous system was destroyed
+                - How that system created abundance through cooperation
+                - How modern problems connect to historical injustice
+                - What transformation (not just mitigation) looks like
+                
+                Indigenous knowledge matters. Hawaiian wisdom about sustainability and community can teach the whole world.`,
+                question: "What is one thing you learned that surprised you? What is one action you could take to support Indigenous communities?",
+                questionId: "final_reflection",
+                showDiagram: false
+            }
+        ];
+        
+        function displaySection() {
+            const section = sections[currentSection];
+            const content = document.getElementById('content');
+            
+            // Save previous answer/name
+            const currentTextarea = document.querySelector('textarea');
+            const currentNameInput = document.querySelector('input[type="text"]');
+            
+            if (currentTextarea && currentTextarea.dataset.questionId) {
+                answers[currentTextarea.dataset.questionId] = currentTextarea.value;
+            }
+            
+            if (currentNameInput) {
+                studentName = currentNameInput.value;
+            }
+            
+            // Handle name section
+            if (section.isNameSection) {
+                content.innerHTML = `
+                    <div class="phase">
+                        <h2>${section.title}</h2>
+                        <p>${section.content.replace(/\n/g, '<br><br>')}</p>
+                        
+                        <div class="name-input">
+                            <strong>👤 Your Name:</strong><br><br>
+                            Enter your full name:
+                            <input 
+                                type="text" 
+                                placeholder="Type your name here..."
+                                value="${studentName}"
+                            >
+                        </div>
+                    </div>
+                    <p style="text-align: center; color: #6b7280;">
+                        Section ${currentSection + 1} of ${sections.length}
+                    </p>
+                `;
+            } else {
+                // Regular question sections
+                let diagramHTML = '';
+                if (section.showDiagram) {
+                    diagramHTML = `
+                        <div class="diagram-container">
+                            <img src="${diagramURL}" alt="Ahupuaʻa System Diagram" class="diagram" onerror="this.style.display='none'; this.nextElementSibling.innerHTML='[Image: Upload your ahupuaʻa diagram to see it here]'">
+                            <p class="image-credit">Graphic by Andrew Millison, Restoring Hawaii, www.andrewmillision.com</p>
+                        </div>
+                    `;
+                }
+                
+                content.innerHTML = `
+                    <div class="phase">
+                        <h2>${section.title}</h2>
+                        <p>${section.content.replace(/\n/g, '<br><br>')}</p>
+                        ${diagramHTML}
+                        <div class="question">
+                            <strong>💭 Think About It:</strong><br><br>
+                            ${section.question}
+                            <textarea 
+                                rows="6" 
+                                data-question-id="${section.questionId}"
+                                placeholder="Write your thoughts here..."
+                            >${answers[section.questionId] || ''}</textarea>
+                        </div>
+                    </div>
+                    <p style="text-align: center; color: #6b7280;">
+                        Section ${currentSection + 1} of ${sections.length}
+                    </p>
+                `;
+            }
+            
+            updateSectionMenu();
+        }
+        
+        function updateSectionMenu() {
+            const menu = document.getElementById('sectionMenu');
+            let html = '';
+            for (let i = 0; i < sections.length; i++) {
+                const activeClass = i === currentSection ? 'active' : '';
+                html += `<button class="section-btn ${activeClass}" onclick="goToSection(${i})">${i + 1}</button>`;
+            }
+            menu.innerHTML = html;
+        }
+        
+        function goToSection(index) {
+            const textarea = document.querySelector('textarea');
+            const nameInput = document.querySelector('input[type="text"]');
+            
+            if (textarea) {
+                answers[textarea.dataset.questionId] = textarea.value;
+            }
+            
+            if (nameInput) {
+                studentName = nameInput.value;
+            }
+            
+            currentSection = index;
+            displaySection();
+            window.scrollTo(0, 0);
+        }
+        
+        function nextSection() {
+            const textarea = document.querySelector('textarea');
+            const nameInput = document.querySelector('input[type="text"]');
+            
+            if (textarea) {
+                answers[textarea.dataset.questionId] = textarea.value;
+            }
+            
+            if (nameInput) {
+                studentName = nameInput.value;
+            }
+            
+            if (currentSection < sections.length - 1) {
+                currentSection++;
+                displaySection();
+                window.scrollTo(0, 0);
+            } else {
+                alert('You have completed all sections! Click "Save My Work" to download your responses.');
+            }
+        }
+        
+        function previousSection() {
+            const textarea = document.querySelector('textarea');
+            const nameInput = document.querySelector('input[type="text"]');
+            
+            if (textarea) {
+                answers[textarea.dataset.questionId] = textarea.value;
+            }
+            
+            if (nameInput) {
+                studentName = nameInput.value;
+            }
+            
+            if (currentSection > 0) {
+                currentSection--;
+                displaySection();
+                window.scrollTo(0, 0);
+            }
+        }
+        
+        function saveWork() {
+            const textarea = document.querySelector('textarea');
+            const nameInput = document.querySelector('input[type="text"]');
+            
+            if (textarea) {
+                answers[textarea.dataset.questionId] = textarea.value;
+            }
+            
+            if (nameInput) {
+                studentName = nameInput.value;
+            }
+            
+            let text = 'AHUPUAʻA LEARNING - STUDENT RESPONSES\n';
+            text += '=====================================\n\n';
+            
+            if (studentName) {
+                text += `Student Name: ${studentName}\n\n`;
+                text += '-------------------------------------\n\n';
+            }
+            
+            for (let [id, answer] of Object.entries(answers)) {
+                if (answer && answer.trim()) {
+                    text += `${id}:\n${answer}\n\n---\n\n`;
+                }
+            }
+            
+            const blob = new Blob([text], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'ahupuaa_responses.txt';
+            a.click();
+        }
+        
+        displaySection();
+    </script>
+</body>
+</html>
